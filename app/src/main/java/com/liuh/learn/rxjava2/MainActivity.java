@@ -5,16 +5,23 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.btn_test_rx_create, R.id.btn_test_rx_map, R.id.btn_test_rx_zip})
+    @OnClick({R.id.btn_test_rx_create, R.id.btn_test_rx_map, R.id.btn_test_rx_zip, R.id.btn_test_rx_concat,
+            R.id.btn_test_rx_flatmap, R.id.btn_test_rx_concatmap})
     void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_test_rx_create:
@@ -37,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn_test_rx_zip:
                 rxExample_zip();
+                break;
+            case R.id.btn_test_rx_concat:
+                rxExample_concat();
+                break;
+            case R.id.btn_test_rx_flatmap:
+                rxExample_flatmap();
+                break;
+            case R.id.btn_test_rx_concatmap:
+                rxExample_concatmap();
                 break;
         }
     }
@@ -206,5 +223,88 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * concat
+     * <p>
+     * 把两个发射器连接成一个发射器
+     * <p>
+     * 第二个发射器把自己的孩子交给了第一个发射器，事件发射是有顺序的
+     */
+    private void rxExample_concat() {
+        Observable.concat(Observable.just(1, 2, 3), Observable.just(4, 5, 6)).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+
+                Log.e("-------", "concat : " + integer + "\n");
+            }
+        });
+    }
+
+    /**
+     * flatMap
+     * <p>
+     * flatMap是一个很有趣的操作符。可以把一个发射器  Observable 通过某种方法转换为多个 Observables，然后再把这些分散的 Observables装进一个单一的发射器 Observable。<br>
+     * 需要注意的是，flatMap 并不能保证事件的顺序，如果需要保证，需要用到ConcatMap。
+     */
+    private void rxExample_flatmap() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                e.onNext(1);
+                e.onNext(2);
+                e.onNext(3);
+            }
+        }).flatMap(new Function<Integer, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(Integer integer) throws Exception {
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    list.add("I am value " + integer);
+                }
+                int delayTime = (int) (1 + Math.random() * 10);
+                return Observable.fromIterable(list).delay(0, TimeUnit.MILLISECONDS);
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Log.e("-------", "flatMap : accept : " + s + "\n");
+                    }
+                });
+    }
+
+    /**
+     * concatMap
+     * <p>
+     * concatMap 与 flatMap 的唯一区别就是 concatMap 保证了顺序
+     */
+    private void rxExample_concatmap() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+                emitter.onNext(1);
+                emitter.onNext(2);
+                emitter.onNext(3);
+            }
+        }).concatMap(new Function<Integer, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(Integer integer) throws Exception {
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    list.add("I am value " + integer);
+                }
+                int delayTime = (int) (1 + Math.random() * 10);
+                return Observable.fromIterable(list).delay(delayTime, TimeUnit.MILLISECONDS);
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Log.e("-------", "concatMap : accept : " + s + "\n");
+                    }
+                });
+    }
 
 }
