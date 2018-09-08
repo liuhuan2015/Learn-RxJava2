@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -21,6 +22,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.btn_test_rx_create, R.id.btn_test_rx_map, R.id.btn_test_rx_zip, R.id.btn_test_rx_concat,
-            R.id.btn_test_rx_flatmap, R.id.btn_test_rx_concatmap})
+            R.id.btn_test_rx_flatmap, R.id.btn_test_rx_concatmap, R.id.btn_test_rx_distinct, R.id.btn_test_rx_filter,
+            R.id.btn_test_rx_buffer, R.id.btn_test_rx_timer, R.id.btn_test_rx_interval, R.id.btn_test_rx_doonnext,
+            R.id.btn_test_rx_skip, R.id.btn_test_rx_take, R.id.btn_test_rx_just})
     void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_test_rx_create:
@@ -54,6 +58,33 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn_test_rx_concatmap:
                 rxExample_concatmap();
+                break;
+            case R.id.btn_test_rx_distinct:
+                rxExample_distinct();
+                break;
+            case R.id.btn_test_rx_filter:
+                rxExample_filter();
+                break;
+            case R.id.btn_test_rx_buffer:
+                rxExample_buffer();
+                break;
+            case R.id.btn_test_rx_timer:
+                rxExample_timer();
+                break;
+            case R.id.btn_test_rx_interval:
+                rxExample_interval();
+                break;
+            case R.id.btn_test_rx_doonnext:
+                rxExample_doonnext();
+                break;
+            case R.id.btn_test_rx_skip:
+                rxExample_skip();
+                break;
+            case R.id.btn_test_rx_take:
+                rxExample_take();
+                break;
+            case R.id.btn_test_rx_just:
+                rxExample_just();
                 break;
         }
     }
@@ -307,4 +338,185 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * distinct
+     * <p>
+     * 去重操作符
+     */
+    private void rxExample_distinct() {
+        Observable.just(1, 1, 1, 2, 2, 3, 4, 5)
+                .distinct()
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.e("-------", "distinct : " + integer + "\n");
+                    }
+                });
+    }
+
+    /**
+     * filter
+     * <p>
+     * 过滤操作符
+     */
+    private void rxExample_filter() {
+        Observable.just(1, 20, 65, -5, 7, 19)
+                .filter(new Predicate<Integer>() {
+                    @Override
+                    public boolean test(Integer integer) throws Exception {
+                        return integer >= 10;
+                    }
+                }).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.e("-------", "filter : " + integer + "\n");
+            }
+        });
+    }
+
+    /**
+     * buffer
+     * <p>
+     * buffer 操作符接受两个参数，buffer(count,skip)，作用是将 Observable 中的数据按 skip (步长) 分成最大不超过 count 的 buffer ，然后生成一个  Observable
+     * <p>
+     * 输出依次为123，345，5
+     */
+    private void rxExample_buffer() {
+        Observable.just(1, 2, 3, 4, 5)
+                .buffer(3, 2)
+                .subscribe(new Consumer<List<Integer>>() {
+                    @Override
+                    public void accept(List<Integer> integers) throws Exception {
+                        Log.e("-------", "buffer size : " + integers.size() + "\n");
+
+                        Log.e("-------", "buffer value : ");
+
+                        for (Integer i : integers) {
+                            Log.e("-------", i + "");
+                        }
+                    }
+                });
+    }
+
+    /**
+     * timer
+     * <p>
+     * 相当于一个定时任务。在 1.x 中它还可以执行间隔逻辑，但在 2.x 中此功能被交给了 interval。
+     * <p>
+     * 需要注意的是，timer 和 interval 均默认在新线程
+     */
+    private void rxExample_timer() {
+        Log.e("-------", "startTime: " + TimeUtils.millis2String(System.currentTimeMillis()));
+        Observable.timer(2, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())// timer 默认在新线程，所以需要切换回主线程
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        Log.e("-------", "timer: " + aLong + "  " + TimeUtils.millis2String(System.currentTimeMillis()));
+                    }
+                });
+    }
+
+    /**
+     * interval
+     * <p>
+     * 用于间隔时间执行某个操作，接受三个参数，分别是第一次发送延迟，间隔时间，时间单位
+     * <p>
+     * 需要处理的问题：如何关闭？
+     */
+
+    private Disposable mDisposable;
+
+    private void rxExample_interval() {
+        Log.e("-------", "startTime: " + TimeUtils.millis2String(System.currentTimeMillis()));
+        mDisposable = Observable.interval(3, 2, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        Log.e("-------", "interval: aLong: " + aLong + "  "
+                                + TimeUtils.millis2String(System.currentTimeMillis()));
+                    }
+                });
+    }
+
+    /**
+     * doOnNext
+     * <p>
+     * 应该不算是一个操作符，但是比较常用。作用是让订阅者在接收到数据之前干点有意思的事情，假如我们在获取到数据之前想先保存一下它。
+     */
+    private void rxExample_doonnext() {
+        Observable.just(1, 2, 3, 4)
+                .doOnNext(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.e("-------", "保存" + integer + "成功");
+                    }
+                }).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.e("-------", "accept : " + integer);
+            }
+        });
+    }
+
+    /**
+     * skip
+     * <p>
+     * 作用和字面意思一样，接受一个long型的参数count，表示跳过count个数目开始接受事件
+     */
+    private void rxExample_skip() {
+        Observable.just(1, 2, 3, 4, 5)
+                .skip(2)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.e("-------", "skip : " + integer + "\n");
+                    }
+                });
+    }
+
+    /**
+     * take
+     * <p>
+     * 接受一个 long 型参数 count ，表示至多接收 count 个数据。
+     */
+    private void rxExample_take() {
+        Flowable.fromArray(1, 2, 3, 4, 5)
+                .take(3)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.e("-------", "accept : take : " + integer);
+                    }
+                });
+    }
+
+    /**
+     * just
+     * <p>
+     * 是一个简单的发射器依次调用onNext方法的操作符
+     */
+    private void rxExample_just() {
+        Observable.just(1, 2, 3)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.e("-------", "accept : just : " + integer);
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("-------", "onDestroy");
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
+        }
+    }
 }

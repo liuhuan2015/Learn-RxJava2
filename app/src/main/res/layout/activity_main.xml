@@ -1,46 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:padding="10dp"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn_test_rx_create"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="test_rx_create" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_test_rx_map"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="test_rx_map" />
+        <Button
+            android:id="@+id/btn_test_rx_create"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_create" />
 
-    <Button
-        android:id="@+id/btn_test_rx_zip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="test_rx_zip" />
+        <Button
+            android:id="@+id/btn_test_rx_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_map" />
 
-    <Button
-        android:id="@+id/btn_test_rx_concat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="test_rx_concat" />
+        <Button
+            android:id="@+id/btn_test_rx_zip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_zip" />
 
-    <Button
-        android:id="@+id/btn_test_rx_flatmap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="test_rx_flatmap" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/holo_blue_light" />
 
-    <Button
-        android:id="@+id/btn_test_rx_concatmap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="test_rx_concatmap" />
+        <Button
+            android:id="@+id/btn_test_rx_concat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_concat" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btn_test_rx_flatmap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_flatmap" />
+
+        <Button
+            android:id="@+id/btn_test_rx_concatmap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_concatmap" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/holo_blue_light" />
+
+        <Button
+            android:id="@+id/btn_test_rx_distinct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_distinct" />
+
+        <Button
+            android:id="@+id/btn_test_rx_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_filter" />
+
+        <Button
+            android:id="@+id/btn_test_rx_buffer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_buffer" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/holo_blue_light" />
+
+        <Button
+            android:id="@+id/btn_test_rx_timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_timer" />
+
+        <Button
+            android:id="@+id/btn_test_rx_interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_interval" />
+
+        <Button
+            android:id="@+id/btn_test_rx_doonnext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_doonnext" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/holo_blue_light" />
+
+        <Button
+            android:id="@+id/btn_test_rx_skip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_skip" />
+
+        <Button
+            android:id="@+id/btn_test_rx_take"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_take" />
+
+        <Button
+            android:id="@+id/btn_test_rx_just"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_just" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/holo_blue_light" />
+
+    </LinearLayout>
+</ScrollView>
