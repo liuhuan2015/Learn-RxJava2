@@ -7,6 +7,8 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
@@ -17,6 +19,8 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
@@ -38,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     @OnClick({R.id.btn_test_rx_create, R.id.btn_test_rx_map, R.id.btn_test_rx_zip, R.id.btn_test_rx_concat,
             R.id.btn_test_rx_flatmap, R.id.btn_test_rx_concatmap, R.id.btn_test_rx_distinct, R.id.btn_test_rx_filter,
             R.id.btn_test_rx_buffer, R.id.btn_test_rx_timer, R.id.btn_test_rx_interval, R.id.btn_test_rx_doonnext,
-            R.id.btn_test_rx_skip, R.id.btn_test_rx_take, R.id.btn_test_rx_just})
+            R.id.btn_test_rx_skip, R.id.btn_test_rx_take, R.id.btn_test_rx_just, R.id.btn_test_rx_single,
+            R.id.btn_test_rx_debounce, R.id.btn_test_rx_defer})
     void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_test_rx_create:
@@ -85,6 +90,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn_test_rx_just:
                 rxExample_just();
+                break;
+            case R.id.btn_test_rx_single:
+                rxExample_single();
+                break;
+            case R.id.btn_test_rx_debounce:
+                rxExample_debounce();
+                break;
+            case R.id.btn_test_rx_defer:
+                rxExample_defer();
                 break;
         }
     }
@@ -509,6 +523,103 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("-------", "accept : just : " + integer);
                     }
                 });
+    }
+
+    /**
+     * single
+     * <p>
+     * 只会接受一个参数，SingleObserver 只会调用 onError() 或者 onSuccess()
+     */
+    private void rxExample_single() {
+        Single.just(new Random().nextInt())
+                .subscribe(new SingleObserver<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Integer integer) {
+                        Log.e("-------", "single : onSuccess : " + integer + "\n");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("-------", "single : onError : " + e.getMessage() + "\n");
+                    }
+                });
+    }
+
+    /**
+     * debounce
+     * <p>
+     * 去除发送频率过快的项，很有用的
+     * <p>
+     * 下面的代码会去除发送间隔时间小于 500 毫秒的发射事件，所以 1 和 3 被去掉了
+     */
+    private void rxExample_debounce() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+                emitter.onNext(1);
+                Thread.sleep(400);
+                emitter.onNext(2);
+                Thread.sleep(505);
+                emitter.onNext(3);
+                Thread.sleep(100);
+                emitter.onNext(4);
+                Thread.sleep(605);
+                emitter.onNext(5);
+                Thread.sleep(510);
+                emitter.onComplete();
+            }
+        }).debounce(500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.e("-------", "debounce : accept : " + integer);
+                    }
+                });
+    }
+
+    /**
+     * defer
+     * <p>
+     * 简单的说，就是每次订阅都会创建一个新的Observable，如果没有被订阅，就不会产生新的Observable
+     */
+    private void rxExample_defer() {
+
+        Observable<Integer> observable = Observable.defer(new Callable<ObservableSource<Integer>>() {
+            @Override
+            public ObservableSource<Integer> call() throws Exception {
+                return Observable.just(1, 2, 3);
+            }
+        });
+
+        observable.subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.e("-------", "defer : " + integer + "\n");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("-------", "defer : onError : " + e.getMessage() + "\n");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.e("-------", "defer : onComplete\n");
+            }
+        });
+
     }
 
     @Override
