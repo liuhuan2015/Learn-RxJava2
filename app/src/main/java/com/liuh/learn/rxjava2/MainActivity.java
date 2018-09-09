@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
             R.id.btn_test_rx_flatmap, R.id.btn_test_rx_concatmap, R.id.btn_test_rx_distinct, R.id.btn_test_rx_filter,
             R.id.btn_test_rx_buffer, R.id.btn_test_rx_timer, R.id.btn_test_rx_interval, R.id.btn_test_rx_doonnext,
             R.id.btn_test_rx_skip, R.id.btn_test_rx_take, R.id.btn_test_rx_just, R.id.btn_test_rx_single,
-            R.id.btn_test_rx_debounce, R.id.btn_test_rx_defer})
+            R.id.btn_test_rx_debounce, R.id.btn_test_rx_defer, R.id.btn_test_rx_last, R.id.btn_test_rx_merge,
+            R.id.btn_test_rx_reduce, R.id.btn_test_rx_scan})
     void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_test_rx_create:
@@ -99,6 +100,18 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn_test_rx_defer:
                 rxExample_defer();
+                break;
+            case R.id.btn_test_rx_last:
+                rxExample_last();
+                break;
+            case R.id.btn_test_rx_merge:
+                rxExample_merge();
+                break;
+            case R.id.btn_test_rx_reduce:
+                rxExample_reduce();
+                break;
+            case R.id.btn_test_rx_scan:
+                rxExample_scan();
                 break;
         }
     }
@@ -619,7 +632,78 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("-------", "defer : onComplete\n");
             }
         });
+    }
 
+    /**
+     * last
+     * <p>
+     * 仅取出可观察到的最后一个值，或者是满足某些条件的最后一项。last接收的参数是一个默认值，表示发射器什么也没有发射的时候的默认值
+     * Returns a Single that emits only the last item emitted by this Observable, or a default item if this Observable completes without emitting any items.
+     */
+    private void rxExample_last() {
+        Observable.just(1, 2, 3)
+                .last(4)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.e("-------", "last : accept : " + integer + "\n");
+                    }
+                });
+    }
+
+    /**
+     * merge 合并
+     * <p>
+     * 作用是把多个 Observable 结合起来，接受可变参数，也支持迭代器集合。它和 concat 的区别在于，不用等到 发射器 A 发送完所有的事件再进行发射器 B 的发送。
+     */
+    private void rxExample_merge() {
+        Observable.merge(Observable.just(1, 2), Observable.just(3, 4, 5))
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.e("-------", "accept : merge : " + integer + "\n");
+                    }
+                });
+    }
+
+    /**
+     * reduce
+     * <p>
+     * 每次用一个方法处理一个值，可以有一个 seed 作为初始值
+     */
+    private void rxExample_reduce() {
+        Observable.just(1, 2, 3)
+                .reduce(new BiFunction<Integer, Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer integer, Integer integer2) throws Exception {
+                        return integer + integer2;
+                    }
+                }).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.e("-------", "accept : reduce : " + integer + "\n");
+            }
+        });
+    }
+
+    /**
+     * scan
+     * <p>
+     * scan操作符的作用和reduce的作用一致，唯一区别是 reduce 只讲结果，不讲过程；而 scan 会始终如一地把每一个步骤都输出。
+     */
+    private void rxExample_scan() {
+        Observable.just(1, 2, 3)
+                .scan(new BiFunction<Integer, Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer integer, Integer integer2) throws Exception {
+                        return integer + integer2;
+                    }
+                }).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.e("-------", "accept : scan : " + integer + "\n");
+            }
+        });
     }
 
     @Override

@@ -150,6 +150,34 @@
             android:layout_height="1dp"
             android:background="@android:color/holo_blue_light" />
 
+        <Button
+            android:id="@+id/btn_test_rx_last"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_last" />
+
+        <Button
+            android:id="@+id/btn_test_rx_merge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_merge" />
+
+        <Button
+            android:id="@+id/btn_test_rx_reduce"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_reduce" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/holo_blue_light" />
+
+        <Button
+            android:id="@+id/btn_test_rx_scan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test_rx_scan" />
 
     </LinearLayout>
 </ScrollView>
