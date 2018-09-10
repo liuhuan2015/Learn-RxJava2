@@ -23,4 +23,13 @@ public class GirlsDataRequest {
     public void setResults(List<GirlBean> results) {
         this.results = results;
     }
+
+
+    @Override
+    public String toString() {
+        return "GirlsDataRequest{" +
+                "error=" + error +
+                ", results=" + results +
+                '}';
+    }
 }

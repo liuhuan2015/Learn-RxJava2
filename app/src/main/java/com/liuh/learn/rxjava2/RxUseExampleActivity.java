@@ -2,7 +2,10 @@ package com.liuh.learn.rxjava2;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+
+import com.google.gson.Gson;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -17,6 +20,7 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class RxUseExampleActivity extends AppCompatActivity {
 
@@ -30,7 +34,6 @@ public class RxUseExampleActivity extends AppCompatActivity {
     @OnClick({R.id.btn_rx_http_request_use})
     void onViewClicked(View view) {
         switch (view.getId()) {
-
             case R.id.btn_rx_http_request_use:
                 rxHttpRequest();
                 break;
@@ -50,7 +53,7 @@ public class RxUseExampleActivity extends AppCompatActivity {
             @Override
             public void subscribe(ObservableEmitter<Response> emitter) throws Exception {
                 Request.Builder builder = new Request.Builder()
-                        .url("http://gank.io/api/data/福利/10/1")
+                        .url("http://gank.io/api/data/福利/2/1")
                         .get();
 
                 Request request = builder.build();
@@ -61,25 +64,37 @@ public class RxUseExampleActivity extends AppCompatActivity {
         }).map(new Function<Response, GirlsDataRequest>() {
             @Override
             public GirlsDataRequest apply(Response response) throws Exception {
+                Log.e("-------", "map 线程: " + Thread.currentThread().getName());
+                if (response.isSuccessful()) {
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        Log.e("-------", "map : 转换前： " + body.string());
+                        return new Gson().fromJson(body.string(), GirlsDataRequest.class);
+                    }
+                }
                 return null;
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<GirlsDataRequest>() {
                     @Override
                     public void accept(GirlsDataRequest girlsDataRequest) throws Exception {
-
+                        Log.e("-------", "doOnNext 线程： " + Thread.currentThread().getName() + "\n");
+                        Log.e("-------", "doOnNext : 保存成功");
                     }
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<GirlsDataRequest>() {
                     @Override
                     public void accept(GirlsDataRequest girlsDataRequest) throws Exception {
+                        Log.e("-------", "subscribe 线程： " + Thread.currentThread().getName() + "\n");
+                        Log.e("-------", "成功 ： " + girlsDataRequest.toString() + "\n");
 
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        Log.e("-------", "subscribe 线程： " + Thread.currentThread().getName() + "\n");
+                        Log.e("-------", "失败 ： " + throwable.getMessage() + "\n");
                     }
                 });
     }
