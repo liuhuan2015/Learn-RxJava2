@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".RxOperatorsLearnActivity" />
-        <activity android:name=".RxUseExampleActivity"></activity>
+        <activity android:name=".RxUseExampleActivity" />
+        <activity android:name=".RxCaseConcatActivity"></activity>
     </application>
 
 </manifest>
