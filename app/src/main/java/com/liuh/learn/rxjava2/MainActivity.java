@@ -15,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
-
     }
 
     @OnClick({R.id.btn_rx_operators, R.id.btn_rx_use_example})
