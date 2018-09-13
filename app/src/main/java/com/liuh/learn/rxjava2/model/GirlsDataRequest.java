@@ -1,4 +1,4 @@
-package com.liuh.learn.rxjava2;
+package com.liuh.learn.rxjava2.model;
 
 import java.util.List;
 

@@ -5,18 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RxCaseConcatActivity">
+    tools:context=".usecase.RxCaseConcatActivity">
 
     <Button
         android:id="@+id/btn_request_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="发起网路请求" />
+        android:text="先获取缓存数据，再读取网络数据" />
 
     <TextView
         android:id="@+id/tv_data_about"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 
 </LinearLayout>

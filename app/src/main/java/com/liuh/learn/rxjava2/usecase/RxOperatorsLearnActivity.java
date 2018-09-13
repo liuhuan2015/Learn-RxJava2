@@ -1,9 +1,12 @@
-package com.liuh.learn.rxjava2;
+package com.liuh.learn.rxjava2.usecase;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import com.liuh.learn.rxjava2.R;
+import com.liuh.learn.rxjava2.utils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;

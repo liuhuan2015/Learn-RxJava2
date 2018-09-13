@@ -1,4 +1,4 @@
-package com.liuh.learn.rxjava2;
+package com.liuh.learn.rxjava2.usecase;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +16,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
+import com.liuh.learn.rxjava2.CacheManager;
+import com.liuh.learn.rxjava2.model.GirlsDataRequest;
+import com.liuh.learn.rxjava2.R;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 /**
@@ -40,8 +43,6 @@ public class RxCaseConcatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rx_case_concat);
         ButterKnife.bind(this);
-
-
     }
 
     @OnClick(R.id.btn_request_data)
@@ -113,8 +114,6 @@ public class RxCaseConcatActivity extends AppCompatActivity {
                         tvDataAbout.append("accept: 读取数据失败："+throwable.getMessage()+"\n");
                     }
                 });
-
-
     }
 
 }

@@ -1,4 +1,4 @@
-package com.liuh.learn.rxjava2;
+package com.liuh.learn.rxjava2.usecase;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.liuh.learn.rxjava2.model.GirlsDataRequest;
+import com.liuh.learn.rxjava2.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,7 +17,6 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -26,7 +27,7 @@ import okhttp3.Request.Builder;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class RxUseExampleActivity extends AppCompatActivity {
+public class RxUseSimpleHttpRequestActivity extends AppCompatActivity {
 
     @BindView(R.id.tv_rx_http_request_use_result)
     TextView tvHttpRequestResult;

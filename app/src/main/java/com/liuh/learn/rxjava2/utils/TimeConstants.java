@@ -1,4 +1,4 @@
-package com.liuh.learn.rxjava2;
+package com.liuh.learn.rxjava2.utils;
 
 import android.support.annotation.IntDef;
 

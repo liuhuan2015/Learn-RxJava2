@@ -18,9 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RxOperatorsLearnActivity" />
-        <activity android:name=".RxUseExampleActivity" />
-        <activity android:name=".RxCaseConcatActivity"></activity>
+        <activity android:name=".usecase.RxOperatorsLearnActivity" />
+        <activity android:name=".usecase.RxUseSimpleHttpRequestActivity" />
+        <activity android:name=".usecase.RxCaseConcatActivity" />
+        <activity android:name=".usecase.RxCaseFlatmapActivity" />
+        <activity android:name=".usecase.RxCaseZipActivity"></activity>
     </application>
 
 </manifest>

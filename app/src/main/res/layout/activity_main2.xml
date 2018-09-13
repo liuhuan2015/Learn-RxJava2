@@ -15,9 +15,27 @@
         android:text="常用操作符" />
 
     <Button
-        android:id="@+id/btn_rx_use_example"
+        android:id="@+id/btn_a_simple_http_request"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="实际使用场景例子" />
+        android:text="一个简单的网络请求" />
+
+    <Button
+        android:id="@+id/btn_http_request_concat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="先取缓存数据，再取网络数据" />
+
+    <Button
+        android:id="@+id/btn_http_request_flatmap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="多个网络请求依次依赖" />
+
+    <Button
+        android:id="@+id/btn_http_request_zip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="结合多个接口的数据更新UI" />
 
 </LinearLayout>

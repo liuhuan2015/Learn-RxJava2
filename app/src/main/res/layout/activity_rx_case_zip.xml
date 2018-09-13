@@ -5,18 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".usecase.RxUseSimpleHttpRequestActivity">
+    tools:context=".usecase.RxCaseZipActivity">
 
     <Button
-        android:id="@+id/btn_rx_http_request_use"
+        android:id="@+id/btn_updateUI_with_multi_interface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="一个简单的网络请求" />
+        android:text="结合多个数据的接口更新ui" />
 
     <TextView
-        android:id="@+id/tv_rx_http_request_use_result"
+        android:id="@+id/tv_data_about_zip"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
