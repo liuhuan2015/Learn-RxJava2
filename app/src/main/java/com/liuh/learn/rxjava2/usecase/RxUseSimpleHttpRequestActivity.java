@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.liuh.learn.rxjava2.model.GirlsDataRequest;
+import com.liuh.learn.rxjava2.model.CategoryDataRequest;
 import com.liuh.learn.rxjava2.R;
 
 import butterknife.BindView;
@@ -73,24 +73,24 @@ public class RxUseSimpleHttpRequestActivity extends AppCompatActivity {
                 Response response = call.execute();
                 e.onNext(response);
             }
-        }).map(new Function<Response, GirlsDataRequest>() {
+        }).map(new Function<Response, CategoryDataRequest>() {
             @Override
-            public GirlsDataRequest apply(Response response) throws Exception {
+            public CategoryDataRequest apply(Response response) throws Exception {
 
                 Log.e("-------", "map 线程:" + Thread.currentThread().getName() + "\n");
                 if (response.isSuccessful()) {
                     ResponseBody body = response.body();
                     if (body != null) {
                         Log.e("-------", "map:转换前:" + response.body());//这里如果写成 body.string() ,就会有问题，想不通
-                        return new Gson().fromJson(body.string(), GirlsDataRequest.class);
+                        return new Gson().fromJson(body.string(), CategoryDataRequest.class);
                     }
                 }
                 return null;
             }
         }).observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<GirlsDataRequest>() {
+                .doOnNext(new Consumer<CategoryDataRequest>() {
                     @Override
-                    public void accept(GirlsDataRequest s) throws Exception {
+                    public void accept(CategoryDataRequest s) throws Exception {
                         Log.e("-------", "doOnNext 线程:" + Thread.currentThread().getName() + "\n");
                         Log.e("-------", "doOnNext: 保存成功：" + s.toString() + "\n");
                         tvHttpRequestResult.append("doOnNext 线程:" + Thread.currentThread().getName() + "\n");
@@ -98,9 +98,9 @@ public class RxUseSimpleHttpRequestActivity extends AppCompatActivity {
                     }
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<GirlsDataRequest>() {
+                .subscribe(new Consumer<CategoryDataRequest>() {
                     @Override
-                    public void accept(GirlsDataRequest data) throws Exception {
+                    public void accept(CategoryDataRequest data) throws Exception {
                         Log.e("-------", "subscribe 线程:" + Thread.currentThread().getName() + "\n");
                         Log.e("-------", "成功:" + data.toString() + "\n");
                         tvHttpRequestResult.append("subscribe 线程:" + Thread.currentThread().getName() + "\n");

@@ -2,11 +2,11 @@ package com.liuh.learn.rxjava2.model;
 
 import java.util.List;
 
-public class GirlsDataRequest {
+public class CategoryDataRequest {
 
     private boolean error;
 
-    private List<GirlBean> results;
+    private List<ItemBean> results;
 
     public boolean isError() {
         return error;
@@ -16,18 +16,18 @@ public class GirlsDataRequest {
         this.error = error;
     }
 
-    public List<GirlBean> getResults() {
+    public List<ItemBean> getResults() {
         return results;
     }
 
-    public void setResults(List<GirlBean> results) {
+    public void setResults(List<ItemBean> results) {
         this.results = results;
     }
 
 
     @Override
     public String toString() {
-        return "GirlsDataRequest{" +
+        return "CategoryDataRequest{" +
                 "error=" + error +
                 ", results=" + results +
                 '}';

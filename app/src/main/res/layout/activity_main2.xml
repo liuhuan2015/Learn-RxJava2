@@ -38,4 +38,10 @@
         android:layout_height="wrap_content"
         android:text="结合多个接口的数据更新UI" />
 
+    <Button
+        android:id="@+id/btn_http_request_interval"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="间隔任务实现心跳" />
+
 </LinearLayout>

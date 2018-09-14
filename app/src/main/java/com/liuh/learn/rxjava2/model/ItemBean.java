@@ -1,6 +1,6 @@
 package com.liuh.learn.rxjava2.model;
 
-public class GirlBean {
+public class ItemBean {
 
     /**
      * _id : 5b830bba9d2122031f86ee51
@@ -98,7 +98,7 @@ public class GirlBean {
 
     @Override
     public String toString() {
-        return "GirlBean{" +
+        return "ItemBean{" +
                 "_id='" + _id + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", desc='" + desc + '\'' +

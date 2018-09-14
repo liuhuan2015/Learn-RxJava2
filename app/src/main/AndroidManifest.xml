@@ -22,7 +22,8 @@
         <activity android:name=".usecase.RxUseSimpleHttpRequestActivity" />
         <activity android:name=".usecase.RxCaseConcatActivity" />
         <activity android:name=".usecase.RxCaseFlatmapActivity" />
-        <activity android:name=".usecase.RxCaseZipActivity"></activity>
+        <activity android:name=".usecase.RxCaseZipActivity" />
+        <activity android:name=".usecase.RxCaseIntervalActivity"></activity>
     </application>
 
 </manifest>

@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.liuh.learn.rxjava2.R;
-import com.liuh.learn.rxjava2.model.GirlBean;
-import com.liuh.learn.rxjava2.model.GirlsDataRequest;
+import com.liuh.learn.rxjava2.model.CategoryDataRequest;
+import com.liuh.learn.rxjava2.model.ItemBean;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import butterknife.BindView;
@@ -44,39 +44,39 @@ public class RxCaseFlatmapActivity extends AppCompatActivity {
     void onRequestDataClicked(View view) {
         Rx2AndroidNetworking.get("http://gank.io/api/data/福利/2/1")
                 .build()
-                .getObjectObservable(GirlsDataRequest.class) // 发起获取girls列表的请求，并解析到GirlsDataRequest
+                .getObjectObservable(CategoryDataRequest.class) // 发起获取girls列表的请求，并解析到GirlsDataRequest
                 .subscribeOn(Schedulers.io()) // 在io线程进行网络请求
                 .observeOn(AndroidSchedulers.mainThread()) // 在主线程处理获取girls列表的请求结果
-                .doOnNext(new Consumer<GirlsDataRequest>() {
+                .doOnNext(new Consumer<CategoryDataRequest>() {
                     @Override
-                    public void accept(GirlsDataRequest girlsDataRequest) throws Exception {
+                    public void accept(CategoryDataRequest categoryDataRequest) throws Exception {
                         // 先根据获取girls列表的响应结果做一些操作
                         Log.e("-----", "accept---doOnNext");
-                        tvDataAbout.append("accept : doOnNext : " + girlsDataRequest.toString() + "\n");
+                        tvDataAbout.append("accept : doOnNext : " + categoryDataRequest.toString() + "\n");
                     }
                 })
                 .observeOn(Schedulers.io()) // 回到 io 线程去处理获取girl详情的请求
-                .flatMap(new Function<GirlsDataRequest, ObservableSource<GirlBean>>() {
+                .flatMap(new Function<CategoryDataRequest, ObservableSource<ItemBean>>() {
                     @Override
-                    public ObservableSource<GirlBean> apply(GirlsDataRequest girlsDataRequest) throws Exception {
-                        if (girlsDataRequest != null && girlsDataRequest.getResults() != null &&
-                                girlsDataRequest.getResults().size() > 0) {
+                    public ObservableSource<ItemBean> apply(CategoryDataRequest categoryDataRequest) throws Exception {
+                        if (categoryDataRequest != null && categoryDataRequest.getResults() != null &&
+                                categoryDataRequest.getResults().size() > 0) {
                             // 这里会 error 的，因为这个接口时不存在的，只是为了写成依赖上一个接口的样子。
                             return Rx2AndroidNetworking.post("http://gank.io/api/data/福利/detail")
-                                    .addBodyParameter("id", girlsDataRequest.getResults().get(0).get_id())
+                                    .addBodyParameter("id", categoryDataRequest.getResults().get(0).get_id())
                                     .build()
-                                    .getObjectObservable(GirlBean.class);
+                                    .getObjectObservable(ItemBean.class);
                         }
 
                         return null;
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<GirlBean>() {
+                .subscribe(new Consumer<ItemBean>() {
                     @Override
-                    public void accept(GirlBean girlBean) throws Exception {
+                    public void accept(ItemBean itemBean) throws Exception {
                         Log.e("-----", "access---success");
-                        tvDataAbout.append("access---success : " + girlBean.toString());
+                        tvDataAbout.append("access---success : " + itemBean.toString());
                     }
                 }, new Consumer<Throwable>() {
                     @Override

@@ -1,6 +1,6 @@
 package com.liuh.learn.rxjava2;
 
-import com.liuh.learn.rxjava2.model.GirlsDataRequest;
+import com.liuh.learn.rxjava2.model.CategoryDataRequest;
 
 /**
  * 缓存管理类
@@ -9,7 +9,7 @@ public class CacheManager {
 
     private static CacheManager mCacheManager;
 
-    private GirlsDataRequest mGirlsDataRequest;
+    private CategoryDataRequest mCategoryDataRequest;
 
     private CacheManager() {
     }
@@ -21,11 +21,11 @@ public class CacheManager {
         return mCacheManager;
     }
 
-    public GirlsDataRequest getGirlsDataRequest() {
-        return mGirlsDataRequest;
+    public CategoryDataRequest getGirlsDataRequest() {
+        return mCategoryDataRequest;
     }
 
-    public void setGirlsDataRequest(GirlsDataRequest mGirlsDataRequest) {
-        this.mGirlsDataRequest = mGirlsDataRequest;
+    public void setGirlsDataRequest(CategoryDataRequest mCategoryDataRequest) {
+        this.mCategoryDataRequest = mCategoryDataRequest;
     }
 }

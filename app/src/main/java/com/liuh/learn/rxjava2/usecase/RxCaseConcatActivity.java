@@ -17,7 +17,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import com.liuh.learn.rxjava2.CacheManager;
-import com.liuh.learn.rxjava2.model.GirlsDataRequest;
+import com.liuh.learn.rxjava2.model.CategoryDataRequest;
 import com.liuh.learn.rxjava2.R;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
@@ -55,11 +55,11 @@ public class RxCaseConcatActivity extends AppCompatActivity {
     }
 
     private void requestDataConcat() {
-        Observable<GirlsDataRequest> cache = Observable.create(new ObservableOnSubscribe<GirlsDataRequest>() {
+        Observable<CategoryDataRequest> cache = Observable.create(new ObservableOnSubscribe<CategoryDataRequest>() {
             @Override
-            public void subscribe(ObservableEmitter<GirlsDataRequest> emitter) throws Exception {
+            public void subscribe(ObservableEmitter<CategoryDataRequest> emitter) throws Exception {
                 Log.e("-----", "create 当前线程： " + Thread.currentThread().getName() + "\n");
-                GirlsDataRequest data = CacheManager.getInstance().getGirlsDataRequest();
+                CategoryDataRequest data = CacheManager.getInstance().getGirlsDataRequest();
 
                 // 在操作符 concat 中，只有调用 onComplete 之后才会执行下一个 Observable
                 if (data != null) { // 如果缓存数据不为空，则直接读取缓存数据，而不读取网络数据
@@ -88,23 +88,23 @@ public class RxCaseConcatActivity extends AppCompatActivity {
             }
         });
 
-        Observable<GirlsDataRequest> network = Rx2AndroidNetworking.get("http://gank.io/api/data/福利/5/1")
+        Observable<CategoryDataRequest> network = Rx2AndroidNetworking.get("http://gank.io/api/data/福利/5/1")
                 .build()
-                .getObjectObservable(GirlsDataRequest.class);
+                .getObjectObservable(CategoryDataRequest.class);
 
         Observable.concat(cache, network)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<GirlsDataRequest>() {
+                .subscribe(new Consumer<CategoryDataRequest>() {
                     @Override
-                    public void accept(GirlsDataRequest girlsDataRequest) throws Exception {
+                    public void accept(CategoryDataRequest categoryDataRequest) throws Exception {
                         if (isFromNet) {
                             tvDataAbout.append("accept : 网络获取数据，设置缓存: \n");
-                            Log.e("-----", "accept : 网络获取数据，设置缓存: \n" + girlsDataRequest.toString());
-                            CacheManager.getInstance().setGirlsDataRequest(girlsDataRequest);
+                            Log.e("-----", "accept : 网络获取数据，设置缓存: \n" + categoryDataRequest.toString());
+                            CacheManager.getInstance().setGirlsDataRequest(categoryDataRequest);
                         }
-                        tvDataAbout.append("accept: 读取数据成功:" + girlsDataRequest.toString() + "\n");
-                        Log.e("-----", "accept: 读取数据成功:" + girlsDataRequest.toString());
+                        tvDataAbout.append("accept: 读取数据成功:" + categoryDataRequest.toString() + "\n");
+                        Log.e("-----", "accept: 读取数据成功:" + categoryDataRequest.toString());
                     }
                 }, new Consumer<Throwable>() {
                     @Override
