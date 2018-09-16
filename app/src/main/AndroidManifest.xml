@@ -23,7 +23,9 @@
         <activity android:name=".usecase.RxCaseConcatActivity" />
         <activity android:name=".usecase.RxCaseFlatmapActivity" />
         <activity android:name=".usecase.RxCaseZipActivity" />
-        <activity android:name=".usecase.RxCaseIntervalActivity"></activity>
+        <activity android:name=".usecase.RxCaseIntervalActivity" />
+        <activity android:name=".usecase.RxCaseDebounceActivity" />
+        <activity android:name=".usecase.RxCaseThreadSchedulerActivity"></activity>
     </application>
 
 </manifest>
