@@ -31,4 +31,10 @@
         android:layout_height="wrap_content"
         android:text="request_flowable_异步的2" />
 
+    <Button
+        android:id="@+id/btn_flowable_test_readfile_from_sd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="从sd卡上读取一个文件，一行一行读取" />
+
 </LinearLayout>

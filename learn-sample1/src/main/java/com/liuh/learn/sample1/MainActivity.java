@@ -1,5 +1,6 @@
 package com.liuh.learn.sample1;
 
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,12 @@ import android.view.View;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -49,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.btn_flowable_test, R.id.btn_flowable_test_synchro, R.id.btn_flowable_test_asynchronous,
-            R.id.btn_flowable_test_asynchronous2})
+            R.id.btn_flowable_test_asynchronous2, R.id.btn_flowable_test_readfile_from_sd})
     void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_flowable_test:
@@ -63,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn_flowable_test_asynchronous2:
                 demo_flowable_asynchronous2();
+                break;
+            case R.id.btn_flowable_test_readfile_from_sd:
+                practice1();
                 break;
         }
     }
@@ -258,6 +268,70 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete() {
                         Log.e("---", "onComplete");
+                    }
+                });
+    }
+
+
+    public void practice1() {
+        Flowable.create(new FlowableOnSubscribe<String>() {
+            @Override
+            public void subscribe(FlowableEmitter<String> emitter) throws Exception {
+
+                try {
+
+                    InputStream inputStream = getResources().openRawResource(R.raw.kangqiao);
+                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "gbk");
+                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                    String str;
+
+                    while ((str = bufferedReader.readLine()) != null && !emitter.isCancelled()) {
+                        while (emitter.requested() == 0) {
+                            if (emitter.isCancelled()) {
+                                break;
+                            }
+                        }
+                        emitter.onNext(str);
+                    }
+                    bufferedReader.close();
+                    inputStreamReader.close();
+                    inputStream.close();
+
+                    emitter.onComplete();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, BackpressureStrategy.ERROR)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        mSubscription = s;
+                        mSubscription.request(1);
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        System.out.println(s);
+                        try {
+                            Thread.sleep(2000);
+                            mSubscription.request(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        System.out.println(t);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }
